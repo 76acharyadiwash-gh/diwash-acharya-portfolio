@@ -1087,6 +1087,7 @@ body.light .about-copy strong {
    ========================= */
 
 #about-typing .about-line {
+  display: block;
   opacity: 0;
   visibility: hidden;
 }

@@ -1,6 +1,6 @@
 # Diwash Acharya — Static Portfolio
 
-A vanilla HTML/CSS/JavaScript portfolio inspired by the Abdul Rehman Waseem portfolio site.
+A vanilla HTML/CSS/JavaScript  portfolio site.
 
 ## Included
 
@@ -33,9 +33,8 @@ y icons use the Devicon CDN. The site itself has no backend.
 
 ## Reference
 
-The visual direction follows the supplied screenshots and the public reference:
+The visual direction follows the reference:
 https://abdulrehmanwaseem.me/
-https://github.com/abdulrehmanwaseem/My-Portfolio
 
 The reference repository is MIT licensed and its README states that the code can be reused after removing the original owner's personal information.
 
@@ -48,3 +47,4 @@ The reference repository is MIT licensed and its README states that the code can
 - Larger technology/profile icons and more generous spacing.
 - Reduced-motion accessibility support.
 - Still 100% static: HTML + CSS + JavaScript, with no backend or database.
+- 

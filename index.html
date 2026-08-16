@@ -68,11 +68,11 @@
     dotColors: ['#CBCF80', '#753B38', '#ffffff', '#354A66', '#3A2E63', '#ffffff'],  // Multiple dot colors
     lineColor: '#ffffff',      // Color of connecting lines
     dotCount: 130,              // Total number of dots
-    maxRadius: 4,              // Maximum size of dots
-    minRadius: 1.5,            // Minimum size of dots
-    maxSpeed: 0.8,             // Maximum movement speed
+    maxRadius: 5,              // Maximum size of dots
+    minRadius: 2,            // Minimum size of dots
+    maxSpeed: 1.1,             // Maximum movement speed
     connectDistance: 190,      // Max distance to draw lines between dots
-    mouseRadius: 150,          // Distance around mouse where dots react
+    mouseRadius: 250,          // Distance around mouse where dots react
     mousePush: true            // True: push dots away | False: attract dots
   };
 
@@ -169,6 +169,70 @@
   }
 
   animate();
+</script>
+
+<canvas id="trailCanvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: transparent;"></canvas>
+
+<script>
+  const trailCanvas = document.getElementById('trailCanvas');
+  const trailCtx = trailCanvas.getContext('2d');
+  
+  let trailWidth, trailHeight;
+  let trailPoints = []; 
+  const trailLineWidth = 6;
+  const trailLifeSpan = 500;
+
+  function trailResize() {
+    trailWidth = trailCanvas.width = window.innerWidth;
+    trailHeight = trailCanvas.height = window.innerHeight;
+  }
+  
+  window.addEventListener('resize', trailResize);
+  
+  function addTrailPoint(x, y) {
+    trailPoints.push({ x: x, y: y, time: performance.now() });
+  }
+
+  window.addEventListener('mousemove', (e) => addTrailPoint(e.clientX, e.clientY));
+  window.addEventListener('touchmove', (e) => {
+    if(e.touches.length > 0) addTrailPoint(e.touches[0].clientX, e.touches[0].clientY);
+  });
+
+  trailResize();
+
+  function trailAnimate() {
+    trailCtx.clearRect(0, 0, trailWidth, trailHeight);
+    
+    const currentTime = performance.now();
+    trailPoints = trailPoints.filter(point => (currentTime - point.time) < trailLifeSpan);
+
+    if (trailPoints.length > 1) {
+      for (let i = 1; i < trailPoints.length; i++) {
+        const p1 = trailPoints[i - 1];
+        const p2 = trailPoints[i];
+        
+        const age = currentTime - p2.time;
+        const opacity = 1 - (age / trailLifeSpan);
+
+        trailCtx.beginPath();
+        trailCtx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+        trailCtx.lineWidth = trailLineWidth * opacity;
+        trailCtx.lineCap = 'round';
+        trailCtx.lineJoin = 'round';
+
+        const midX = (p1.x + p2.x) / 2;
+        const midY = (p1.y + p2.y) / 2;
+
+        trailCtx.moveTo(p1.x, p1.y);
+        trailCtx.quadraticCurveTo(midX, midY, p2.x, p2.y);
+        trailCtx.stroke();
+      }
+    }
+
+    requestAnimationFrame(trailAnimate);
+  }
+  
+  trailAnimate();
 </script>
 
   <div class="site-shell">
@@ -447,7 +511,7 @@
 
 
             <p class="role">
-              Developer · B.Sc. CSIT Student
+              Vibecoder · B.Sc. CSIT Student
             </p>
 
           </div>
