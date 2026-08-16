@@ -8,48 +8,65 @@ import {
    HELPERS
    ========================================================= */
 
-const $ = (s, scope = document) =>
-  scope.querySelector(s);
+const $ = (
+  selector,
+  scope = document
+) =>
+  scope.querySelector(selector);
 
-const $$ = (s, scope = document) =>
-  [...scope.querySelectorAll(s)];
+
+const $$ = (
+  selector,
+  scope = document
+) =>
+  [...scope.querySelectorAll(selector)];
 
 
 /* =========================================================
    INITIALIZATION
    ========================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
 
-  // Footer year
-  const year = $("#year");
+    /* Footer year */
+    const year = $("#year");
 
-  if (year) {
-    year.textContent = new Date().getFullYear();
+    if (year) {
+      year.textContent =
+        new Date().getFullYear();
+    }
+
+
+    /* Nepal time */
+    updateTime();
+
+    setInterval(
+      updateTime,
+      1000
+    );
+
+
+    /* Existing functionality */
+    initTheme();
+
+    initCommandPalette();
+
+    initPronounce();
+
+    initExpanders();
+
+
+    /* GitHub */
+    initGitHubContributions();
+
+
+    /* Anime */
+    initAnimeMotion();
+
   }
-
-
-  // Nepal time
-  updateTime();
-
-  setInterval(updateTime, 1000);
-
-
-  // Existing portfolio functionality
-  initTheme();
-  initCommandPalette();
-  initPronounce();
-  initExpanders();
-
-
-  // New custom GitHub contribution calendar
-  initGitHubContributions();
-
-
-  // Anime.js animations
-  initAnimeMotion();
-
-});
+);
 
 
 /* =========================================================
@@ -58,17 +75,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function updateTime() {
 
-  const el = $("#local-time");
+  const element =
+    $("#local-time");
 
-  if (!el) return;
+  if (!element) {
+    return;
+  }
 
-  el.textContent =
-    new Intl.DateTimeFormat("en-US", {
-      timeZone: "Asia/Kathmandu",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false
-    }).format(new Date());
+
+  element.textContent =
+    new Intl.DateTimeFormat(
+      "en-US",
+      {
+        timeZone:
+          "Asia/Kathmandu",
+
+        hour:
+          "2-digit",
+
+        minute:
+          "2-digit",
+
+        hour12:
+          false
+      }
+    ).format(
+      new Date()
+    );
 
 }
 
@@ -115,18 +148,25 @@ async function initGitHubContributions() {
   try {
 
     const response =
-      await fetch(apiURL, {
-        method: "GET",
-        headers: {
-          "Accept": "application/json"
+      await fetch(
+        apiURL,
+        {
+          method: "GET",
+
+          headers: {
+            "Accept":
+              "application/json"
+          }
         }
-      });
+      );
 
 
     if (!response.ok) {
+
       throw new Error(
         `GitHub contribution API returned ${response.status}`
       );
+
     }
 
 
@@ -136,11 +176,15 @@ async function initGitHubContributions() {
 
     if (
       !data ||
-      !Array.isArray(data.contributions)
+      !Array.isArray(
+        data.contributions
+      )
     ) {
+
       throw new Error(
         "Invalid contribution data received."
       );
+
     }
 
 
@@ -165,10 +209,6 @@ async function initGitHubContributions() {
     );
 
 
-    /*
-     * Show fallback message.
-     */
-
     if (errorElement) {
       errorElement.hidden = false;
     }
@@ -182,7 +222,7 @@ async function initGitHubContributions() {
 
 
 /* =========================================================
-   RENDER GITHUB CALENDAR
+   RENDER CALENDAR
    ========================================================= */
 
 function renderGitHubCalendar(
@@ -194,7 +234,7 @@ function renderGitHubCalendar(
 
 
   /*
-   * Create tooltip.
+   * Tooltip
    */
 
   let tooltip =
@@ -206,7 +246,9 @@ function renderGitHubCalendar(
   if (!tooltip) {
 
     tooltip =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
     tooltip.className =
       "github-tooltip";
@@ -219,27 +261,36 @@ function renderGitHubCalendar(
 
 
   /*
-   * Convert contributions into
-   * date -> count.
+   * Date -> contribution count
    */
 
   const contributionMap =
     new Map(
-      contributions.map(item => [
-        item.date,
-        Number(item.count || 0)
-      ])
+      contributions.map(
+        item => [
+          item.date,
+          Number(
+            item.count || 0
+          )
+        ]
+      )
     );
 
 
   /*
-   * Get dates.
+   * Dates
    */
 
   const dates =
     contributions
-      .map(item => new Date(item.date))
-      .sort((a, b) => a - b);
+      .map(
+        item =>
+          new Date(item.date)
+      )
+      .sort(
+        (a, b) =>
+          a - b
+      );
 
 
   if (!dates.length) {
@@ -248,15 +299,17 @@ function renderGitHubCalendar(
 
 
   /*
-   * First date.
+   * First date
    */
 
   const firstDate =
-    new Date(dates[0]);
+    new Date(
+      dates[0]
+    );
 
 
   /*
-   * Move first date to Sunday.
+   * Move to Sunday
    */
 
   firstDate.setDate(
@@ -266,52 +319,74 @@ function renderGitHubCalendar(
 
 
   /*
-   * Last date.
+   * Last date
    */
 
   const lastDate =
-    new Date(dates[dates.length - 1]);
+    new Date(
+      dates[
+        dates.length - 1
+      ]
+    );
 
 
   /*
-   * Move last date to Saturday.
+   * Move to Saturday
    */
 
   lastDate.setDate(
     lastDate.getDate() +
-    (6 - lastDate.getDay())
+    (
+      6 -
+      lastDate.getDay()
+    )
   );
 
 
   /*
-   * Generate weeks.
+   * Build weeks
    */
 
   const weeks = [];
 
   let current =
-    new Date(firstDate);
+    new Date(
+      firstDate
+    );
 
 
-  while (current <= lastDate) {
+  while (
+    current <= lastDate
+  ) {
 
     const week = [];
 
 
-    for (let i = 0; i < 7; i++) {
+    for (
+      let i = 0;
+      i < 7;
+      i++
+    ) {
 
       const date =
-        new Date(current);
+        new Date(
+          current
+        );
 
 
       const iso =
-        formatDate(date);
+        formatDate(
+          date
+        );
 
 
       week.push({
         date: iso,
+
         count:
-          contributionMap.get(iso) || 0
+          contributionMap.get(
+            iso
+          ) || 0
       });
 
 
@@ -322,42 +397,52 @@ function renderGitHubCalendar(
     }
 
 
-    weeks.push(week);
+    weeks.push(
+      week
+    );
 
   }
 
 
   /*
-   * Main calendar container.
+   * Main wrapper
    */
 
   const calendar =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   calendar.className =
     "github-calendar-inner";
 
 
-  /* -------------------------------------------------------
-     MONTH LABELS
-     ------------------------------------------------------- */
+  /*
+   * Month labels
+   */
 
   const months =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   months.className =
     "github-months";
 
 
   const monthPositions =
-    getMonthPositions(weeks);
+    getMonthPositions(
+      weeks
+    );
 
 
   monthPositions.forEach(
     ({ name, column }) => {
 
       const label =
-        document.createElement("span");
+        document.createElement(
+          "span"
+        );
 
       label.className =
         "github-month";
@@ -369,7 +454,9 @@ function renderGitHubCalendar(
         `${column * 15}px`;
 
 
-      months.appendChild(label);
+      months.appendChild(
+        label
+      );
 
     }
   );
@@ -380,12 +467,14 @@ function renderGitHubCalendar(
   );
 
 
-  /* -------------------------------------------------------
-     WEEKDAY LABELS
-     ------------------------------------------------------- */
+  /*
+   * Weekdays
+   */
 
   const weekdays =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   weekdays.className =
     "github-weekdays";
@@ -399,17 +488,23 @@ function renderGitHubCalendar(
     "",
     "Fri",
     ""
-  ].forEach(day => {
+  ].forEach(
+    day => {
 
-    const span =
-      document.createElement("span");
+      const span =
+        document.createElement(
+          "span"
+        );
 
-    span.textContent =
-      day;
+      span.textContent =
+        day;
 
-    weekdays.appendChild(span);
+      weekdays.appendChild(
+        span
+      );
 
-  });
+    }
+  );
 
 
   calendar.appendChild(
@@ -417,121 +512,131 @@ function renderGitHubCalendar(
   );
 
 
-  /* -------------------------------------------------------
-     CONTRIBUTION GRID
-     ------------------------------------------------------- */
+  /*
+   * Grid
+   */
 
   const grid =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   grid.className =
     "github-grid";
 
 
-  weeks.forEach(week => {
+  weeks.forEach(
+    week => {
 
-    week.forEach(day => {
+      week.forEach(
+        day => {
 
-      const square =
-        document.createElement("div");
-
-
-      const level =
-        getContributionLevel(
-          day.count
-        );
-
-
-      square.className =
-        `github-day level-${level}`;
-
-
-      square.dataset.date =
-        day.date;
-
-
-      square.dataset.count =
-        day.count;
-
-
-      /*
-       * Tooltip on hover.
-       */
-
-      square.addEventListener(
-        "mouseenter",
-        event => {
-
-          const count =
-            Number(
-              event.currentTarget.dataset.count
+          const square =
+            document.createElement(
+              "div"
             );
 
 
-          const date =
-            event.currentTarget.dataset.date;
+          const level =
+            getContributionLevel(
+              day.count
+            );
 
 
-          tooltip.innerHTML = `
-            <strong>
-              ${count}
-              contribution${count === 1 ? "" : "s"}
-            </strong>
-
-            <br>
-
-            <span class="tooltip-date">
-              ${formatReadableDate(date)}
-            </span>
-          `;
+          square.className =
+            `github-day level-${level}`;
 
 
-          tooltip.classList.add(
-            "visible"
+          square.dataset.date =
+            day.date;
+
+
+          square.dataset.count =
+            day.count;
+
+
+          /*
+           * Tooltip
+           */
+
+          square.addEventListener(
+            "mouseenter",
+            event => {
+
+              const count =
+                Number(
+                  event.currentTarget
+                    .dataset
+                    .count
+                );
+
+
+              const date =
+                event.currentTarget
+                  .dataset
+                  .date;
+
+
+              tooltip.innerHTML = `
+                <strong>
+                  ${count}
+                  contribution${count === 1 ? "" : "s"}
+                </strong>
+                <br>
+                <span class="tooltip-date">
+                  ${formatReadableDate(date)}
+                </span>
+              `;
+
+
+              tooltip.classList.add(
+                "visible"
+              );
+
+
+              positionTooltip(
+                tooltip,
+                event
+              );
+
+            }
           );
 
 
-          positionTooltip(
-            tooltip,
-            event
+          square.addEventListener(
+            "mousemove",
+            event => {
+
+              positionTooltip(
+                tooltip,
+                event
+              );
+
+            }
+          );
+
+
+          square.addEventListener(
+            "mouseleave",
+            () => {
+
+              tooltip.classList.remove(
+                "visible"
+              );
+
+            }
+          );
+
+
+          grid.appendChild(
+            square
           );
 
         }
       );
 
-
-      square.addEventListener(
-        "mousemove",
-        event => {
-
-          positionTooltip(
-            tooltip,
-            event
-          );
-
-        }
-      );
-
-
-      square.addEventListener(
-        "mouseleave",
-        () => {
-
-          tooltip.classList.remove(
-            "visible"
-          );
-
-        }
-      );
-
-
-      grid.appendChild(
-        square
-      );
-
-    });
-
-  });
+    }
+  );
 
 
   calendar.appendChild(
@@ -550,7 +655,9 @@ function renderGitHubCalendar(
    CONTRIBUTION LEVEL
    ========================================================= */
 
-function getContributionLevel(count) {
+function getContributionLevel(
+  count
+) {
 
   if (count <= 0) {
     return 0;
@@ -577,11 +684,14 @@ function getContributionLevel(count) {
    MONTH POSITIONS
    ========================================================= */
 
-function getMonthPositions(weeks) {
+function getMonthPositions(
+  weeks
+) {
 
   const positions = [];
 
-  let lastMonth = null;
+  let lastMonth =
+    null;
 
 
   weeks.forEach(
@@ -597,10 +707,11 @@ function getMonthPositions(weeks) {
         firstDay.getMonth();
 
 
-      if (month !== lastMonth) {
+      if (
+        month !== lastMonth
+      ) {
 
         positions.push({
-
           name:
             firstDay.toLocaleString(
               "en-US",
@@ -611,7 +722,6 @@ function getMonthPositions(weeks) {
 
           column:
             index
-
         });
 
 
@@ -630,10 +740,12 @@ function getMonthPositions(weeks) {
 
 
 /* =========================================================
-   DATE FORMAT
+   DATE
    ========================================================= */
 
-function formatDate(date) {
+function formatDate(
+  date
+) {
 
   const year =
     date.getFullYear();
@@ -642,13 +754,19 @@ function formatDate(date) {
   const month =
     String(
       date.getMonth() + 1
-    ).padStart(2, "0");
+    ).padStart(
+      2,
+      "0"
+    );
 
 
   const day =
     String(
       date.getDate()
-    ).padStart(2, "0");
+    ).padStart(
+      2,
+      "0"
+    );
 
 
   return `${year}-${month}-${day}`;
@@ -673,9 +791,14 @@ function formatReadableDate(
   return date.toLocaleDateString(
     "en-US",
     {
-      month: "short",
-      day: "numeric",
-      year: "numeric"
+      month:
+        "short",
+
+      day:
+        "numeric",
+
+      year:
+        "numeric"
     }
   );
 
@@ -691,7 +814,8 @@ function positionTooltip(
   event
 ) {
 
-  const padding = 12;
+  const padding =
+    12;
 
 
   let x =
@@ -706,14 +830,10 @@ function positionTooltip(
     tooltip.getBoundingClientRect();
 
 
-  /*
-   * Prevent tooltip from going
-   * outside right edge.
-   */
-
   if (
     x + rect.width >
-    window.innerWidth - padding
+    window.innerWidth -
+    padding
   ) {
 
     x =
@@ -724,15 +844,13 @@ function positionTooltip(
   }
 
 
-  /*
-   * Prevent tooltip from going
-   * above viewport.
-   */
-
-  if (y < padding) {
+  if (
+    y < padding
+  ) {
 
     y =
-      event.clientY + 18;
+      event.clientY +
+      18;
 
   }
 
@@ -759,16 +877,17 @@ function updateGitHubSummary(
 
   const total =
     contributions.reduce(
-      (sum, item) =>
+      (
+        sum,
+        item
+      ) =>
         sum +
-        Number(item.count || 0),
+        Number(
+          item.count || 0
+        ),
       0
     );
 
-
-  /*
-   * Total contributions.
-   */
 
   if (totalElement) {
 
@@ -778,17 +897,14 @@ function updateGitHubSummary(
   }
 
 
-  /*
-   * Date range.
-   */
-
   if (
     rangeElement &&
     contributions.length
   ) {
 
     const first =
-      contributions[0].date;
+      contributions[0]
+        .date;
 
 
     const last =
@@ -826,7 +942,9 @@ function initTheme() {
     );
 
 
-  if (saved === "light") {
+  if (
+    saved === "light"
+  ) {
 
     document.body.classList.add(
       "light"
@@ -880,26 +998,33 @@ function initPronounce() {
     () => {
 
       if (
-        !("speechSynthesis" in window)
+        !(
+          "speechSynthesis"
+          in window
+        )
       ) {
+
         return;
+
       }
 
 
       speechSynthesis.cancel();
 
 
-      const u =
+      const utterance =
         new SpeechSynthesisUtterance(
           "Diwash Acharya"
         );
 
 
-      u.rate =
+      utterance.rate =
         0.85;
 
 
-      speechSynthesis.speak(u);
+      speechSynthesis.speak(
+        utterance
+      );
 
     }
   );
@@ -908,7 +1033,7 @@ function initPronounce() {
 
 
 /* =========================================================
-   EXPANDABLE ITEMS
+   EXPANDERS
    ========================================================= */
 
 function initExpanders() {
@@ -918,6 +1043,10 @@ function initExpanders() {
 
       const button =
         $(".expand", item);
+
+
+      const main =
+        $(".list-main", item);
 
 
       if (!button) {
@@ -931,25 +1060,13 @@ function initExpanders() {
 
           event.stopPropagation();
 
-
-          item.classList.toggle(
-            "open"
+          toggleExpander(
+            item,
+            button
           );
-
-
-          button.textContent =
-            item.classList.contains(
-              "open"
-            )
-              ? "⌃"
-              : "⌄";
 
         }
       );
-
-
-      const main =
-        $(".list-main", item);
 
 
       if (main) {
@@ -958,17 +1075,10 @@ function initExpanders() {
           "click",
           () => {
 
-            item.classList.toggle(
-              "open"
+            toggleExpander(
+              item,
+              button
             );
-
-
-            button.textContent =
-              item.classList.contains(
-                "open"
-              )
-                ? "⌃"
-                : "⌄";
 
           }
         );
@@ -982,7 +1092,51 @@ function initExpanders() {
 
 
 /* =========================================================
-   COMMAND PALETTE
+   TOGGLE EXPANDER
+   ========================================================= */
+
+function toggleExpander(
+  item,
+  button
+) {
+
+  item.classList.toggle(
+    "open"
+  );
+
+
+  const svg =
+    button.querySelector(
+      "svg"
+    );
+
+
+  if (!svg) {
+    return;
+  }
+
+
+  if (
+    item.classList.contains(
+      "open"
+    )
+  ) {
+
+    svg.innerHTML =
+      `<path d="m6 15 6-6 6 6" />`;
+
+  } else {
+
+    svg.innerHTML =
+      `<path d="m6 9 6 6 6-6" />`;
+
+  }
+
+}
+
+
+/* =========================================================
+   COMMANDS
    ========================================================= */
 
 const commands = [
@@ -1015,86 +1169,91 @@ const commands = [
     "Products",
     "Things I'm building",
     "products"
+  ],
+
+  [
+    "GitHub Contributions",
+    "Contribution activity",
+    "contributions"
   ]
 
 ];
 
+
+/* =========================================================
+   COMMAND PALETTE
+   ========================================================= */
 
 function initCommandPalette() {
 
   const overlay =
     $("#command-overlay");
 
-
   const input =
     $("#command-input");
-
 
   const results =
     $("#command-results");
 
-
-  /*
-   * If the command palette
-   * doesn't exist, don't crash
-   * the rest of the website.
-   */
 
   if (
     !overlay ||
     !input ||
     !results
   ) {
+
     return;
+
   }
 
 
-  const open = () => {
+  const open =
+    () => {
 
-    overlay.classList.add(
-      "open"
-    );
-
-
-    overlay.setAttribute(
-      "aria-hidden",
-      "false"
-    );
+      overlay.classList.add(
+        "open"
+      );
 
 
-    input.value =
-      "";
+      overlay.setAttribute(
+        "aria-hidden",
+        "false"
+      );
 
 
-    render("");
+      input.value =
+        "";
 
 
-    setTimeout(
-      () => input.focus(),
-      0
-    );
-
-  };
+      render(
+        ""
+      );
 
 
-  const close = () => {
+      setTimeout(
+        () =>
+          input.focus(),
+        0
+      );
 
-    overlay.classList.remove(
-      "open"
-    );
-
-
-    overlay.setAttribute(
-      "aria-hidden",
-      "true"
-    );
-
-  };
+    };
 
 
-  /*
-   * Search button
-   */
+  const close =
+    () => {
+
+      overlay.classList.remove(
+        "open"
+      );
+
+
+      overlay.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+    };
+
 
   const searchTrigger =
     $(".search-trigger");
@@ -1111,7 +1270,7 @@ function initCommandPalette() {
 
 
   /*
-   * Keyboard shortcuts
+   * Ctrl/Command + K
    */
 
   document.addEventListener(
@@ -1119,8 +1278,10 @@ function initCommandPalette() {
     event => {
 
       if (
-        (event.metaKey ||
-          event.ctrlKey) &&
+        (
+          event.metaKey ||
+          event.ctrlKey
+        ) &&
         event.key.toLowerCase() === "k"
       ) {
 
@@ -1144,7 +1305,7 @@ function initCommandPalette() {
 
 
   /*
-   * Click outside
+   * Outside click
    */
 
   overlay.addEventListener(
@@ -1164,7 +1325,7 @@ function initCommandPalette() {
 
 
   /*
-   * Search
+   * Search input
    */
 
   input.addEventListener(
@@ -1179,7 +1340,13 @@ function initCommandPalette() {
   );
 
 
-  function render(query) {
+  /*
+   * Render
+   */
+
+  function render(
+    query
+  ) {
 
     const q =
       query
@@ -1202,11 +1369,16 @@ function initCommandPalette() {
 
         ? filtered
             .map(
-              (command, index) => `
+              (
+                command,
+                index
+              ) => `
 
                 <div
                   class="command-result
-                  ${index === 0 ? "selected" : ""}"
+                  ${index === 0
+                    ? "selected"
+                    : ""}"
                   data-target="${command[2]}"
                 >
 
@@ -1244,40 +1416,45 @@ function initCommandPalette() {
 
 
     $$(".command-result[data-target]", results)
-      .forEach(result => {
+      .forEach(
+        result => {
 
-        result.addEventListener(
-          "click",
-          () => {
+          result.addEventListener(
+            "click",
+            () => {
 
-            close();
-
-
-            const target =
-              document.getElementById(
-                result.dataset.target
-              );
+              close();
 
 
-            if (target) {
+              const target =
+                document.getElementById(
+                  result.dataset.target
+                );
 
-              target.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-              });
+
+              if (target) {
+
+                target.scrollIntoView({
+                  behavior:
+                    "smooth",
+
+                  block:
+                    "start"
+                });
+
+              }
 
             }
+          );
 
-          }
-        );
-
-      });
+        }
+      );
 
   }
 
 
   /*
-   * Enter = select result
+   * Enter
    */
 
   document.addEventListener(
@@ -1289,7 +1466,9 @@ function initCommandPalette() {
           "open"
         )
       ) {
+
         return;
+
       }
 
 
@@ -1314,7 +1493,7 @@ function initCommandPalette() {
 
 
 /* =========================================================
-   ANIME.JS ANIMATIONS
+   ANIME.JS
    ========================================================= */
 
 function initAnimeMotion() {
@@ -1328,12 +1507,14 @@ function initAnimeMotion() {
       "(prefers-reduced-motion: reduce)"
     ).matches
   ) {
+
     return;
+
   }
 
 
   /* -------------------------------------------------------
-     NAME ENTRANCE
+     NAME
      ------------------------------------------------------- */
 
   const name =
@@ -1345,16 +1526,27 @@ function initAnimeMotion() {
     animate(
       name,
       {
-        y: [16, 0],
-        scale: [0.97, 1],
-        duration: 900,
-        ease: "out(4)"
+        y: [
+          16,
+          0
+        ],
+
+        scale: [
+          0.97,
+          1
+        ],
+
+        duration:
+          900,
+
+        ease:
+          "out(4)"
       }
     );
 
 
     /*
-     * Continuous glow.
+     * Glow loop
      */
 
     animate(
@@ -1377,11 +1569,14 @@ function initAnimeMotion() {
           1
         ],
 
-        duration: 2400,
+        duration:
+          2400,
 
-        ease: "inOutSine",
+        ease:
+          "inOutSine",
 
-        loop: true
+        loop:
+          true
 
       }
     );
@@ -1402,9 +1597,16 @@ function initAnimeMotion() {
     animate(
       about,
       {
-        y: [15, 0],
-        duration: 700,
-        ease: "out(4)"
+        y: [
+          15,
+          0
+        ],
+
+        duration:
+          700,
+
+        ease:
+          "out(4)"
       }
     );
 
@@ -1412,23 +1614,38 @@ function initAnimeMotion() {
 
 
   /* -------------------------------------------------------
-     TECHNOLOGY STACK
+     TECHNOLOGIES
      ------------------------------------------------------- */
 
   const technologies =
     $$(".tech");
 
 
-  if (technologies.length) {
+  if (
+    technologies.length
+  ) {
 
     animate(
       technologies,
       {
-        y: [15, 0],
-        scale: [0.96, 1],
-        delay: stagger(40),
-        duration: 500,
-        ease: "out(4)"
+        y: [
+          15,
+          0
+        ],
+
+        scale: [
+          0.96,
+          1
+        ],
+
+        delay:
+          stagger(40),
+
+        duration:
+          500,
+
+        ease:
+          "out(4)"
       }
     );
 
@@ -1445,15 +1662,26 @@ function initAnimeMotion() {
     );
 
 
-  if (cards.length) {
+  if (
+    cards.length
+  ) {
 
     animate(
       cards,
       {
-        y: [15, 0],
-        delay: stagger(35),
-        duration: 550,
-        ease: "out(4)"
+        y: [
+          15,
+          0
+        ],
+
+        delay:
+          stagger(35),
+
+        duration:
+          550,
+
+        ease:
+          "out(4)"
       }
     );
 
