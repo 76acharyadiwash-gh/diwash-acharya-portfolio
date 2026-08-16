@@ -35,11 +35,6 @@ body {
   letter-spacing: -0.01em;
 }
 
-body.light {
-  background: #f6f6f5;
-  color: #171717;
-}
-
 a {
   color: inherit;
 }
@@ -86,7 +81,6 @@ input {
   backdrop-filter: blur(14px);
 }
 
-body.light .topbar {
   background: rgba(246, 246, 245, 0.9);
   border-color: #d7d7d7;
 }
@@ -141,8 +135,6 @@ body.light .topbar {
   color: #fff;
 }
 
-body.light .nav-links a:hover,
-body.light .nav-links a.active {
   color: #111;
 }
 
@@ -222,13 +214,11 @@ body.light .nav-links a.active {
   color: #c9c9ce;
 }
 
-body.light .icon-btn {
   background: #fff;
   border-color: #d9d9dd;
   color: #444;
 }
 
-body.light .search-trigger kbd {
   background: #ededee;
   color: #555;
 }
@@ -248,7 +238,6 @@ body.light .search-trigger kbd {
   border-right: 1px solid #202023;
 }
 
-body.light .content {
   border-color: #ddd;
 }
 
@@ -267,7 +256,6 @@ body.light .content {
   background-size: 10px 10px;
 }
 
-body.light .panel-grid {
   background-image:
     radial-gradient(
       #d8d8d8 1px,
@@ -286,7 +274,6 @@ body.light .panel-grid {
   border-bottom: 1px solid #202023;
 }
 
-body.light .hero {
   border-color: #ddd;
 }
 
@@ -303,7 +290,6 @@ body.light .hero {
   transform: scaleX(1.02);
 }
 
-body.light .hero-logo {
   color: #111;
 }
 
@@ -356,8 +342,6 @@ body.light .hero-logo {
   border-top: 1px solid #202023;
 }
 
-body.light .cover-stripe,
-body.light .section:before {
   background:
     repeating-linear-gradient(
       135deg,
@@ -390,7 +374,6 @@ body.light .section:before {
   border-bottom: 1px solid #202023;
 }
 
-body.light .profile-head {
   border-color: #ddd;
 }
 
@@ -430,7 +413,6 @@ body.light .profile-head {
   letter-spacing: -4px;
 }
 
-body.light .avatar {
   box-shadow:
     0 0 0 5px #f6f6f5;
 }
@@ -541,7 +523,6 @@ body.light .avatar {
   pointer-events: none;
 }
 
-body.light .name-row h1.name-glow {
   color: #111;
 }
 
@@ -636,7 +617,6 @@ body.light .name-row h1.name-glow {
   border-bottom: 1px solid #202023;
 }
 
-body.light .overview {
   border-color: #ddd;
 }
 
@@ -679,7 +659,6 @@ body.light .overview {
   line-height: 1.45;
 }
 
-body.light .info-row {
   color: #3d3d42;
 }
 
@@ -740,7 +719,6 @@ body.light .info-row {
   transform: translateY(-1px);
 }
 
-body.light .info-icon {
   background: #f7f7f8;
 
   border-color: #dedee2;
@@ -748,7 +726,6 @@ body.light .info-icon {
   color: #55555b;
 }
 
-body.light .info-row:hover .info-icon {
   background: #f0f0f2;
 
   border-color: #cfcfd4;
@@ -785,11 +762,9 @@ body.light .info-row:hover .info-icon {
   text-decoration: underline;
 }
 
-body.light .info-row a {
   color: #333;
 }
 
-body.light .info-row a:hover {
   color: #000;
 }
 
@@ -893,13 +868,11 @@ body.light .info-row a:hover {
   background: #101012;
 }
 
-body.light .social-card {
   border-color: #ddd;
 
   background: #f8f8f8;
 }
 
-body.light .social-card:hover {
   background: #efefef;
 }
 
@@ -1009,7 +982,6 @@ body.light .social-card:hover {
   border-bottom: 1px solid #202023;
 }
 
-body.light .section {
   border-color: #ddd;
 }
 
@@ -1078,7 +1050,6 @@ body.light .section {
   color: #fff;
 }
 
-body.light .about-copy strong {
   color: #111;
 }
 
@@ -1105,7 +1076,6 @@ body.light .about-copy strong {
   box-sizing: border-box;
 }
 
-body.light .github-contrib-card {
   background: #fff;
 
   border-color: #ddd;
@@ -1138,7 +1108,6 @@ body.light .github-contrib-card {
   font-size: 14px;
 }
 
-body.light .github-contrib-title {
   color: #222;
 }
 
@@ -1583,34 +1552,25 @@ body.light .github-contrib-title {
 
 /* Light calendar */
 
-body.light .github-month,
-body.light .github-weekdays span,
-body.light .github-calendar-bottom {
   color: #888;
 }
 
-body.light .github-day {
   border-color:
     rgba(0, 0, 0, 0.04);
 }
 
-body.light .github-day.level-0 {
   background: #ebedf0;
 }
 
-body.light .github-day.level-1 {
   background: #9be9a8;
 }
 
-body.light .github-day.level-2 {
   background: #40c463;
 }
 
-body.light .github-day.level-3 {
   background: #30a14e;
 }
 
-body.light .github-day.level-4 {
   background: #216e39;
 }
 
@@ -1686,7 +1646,6 @@ body.light .github-day.level-4 {
   border-top: 1px solid #202023;
 }
 
-body.light .list-item {
   border-color: #ddd;
 }
 
@@ -1917,7 +1876,6 @@ body.light .list-item {
   border-bottom: 1px solid #202023;
 }
 
-body.light .simple-item {
   border-color: #ddd;
 }
 
@@ -2007,7 +1965,6 @@ body.light .simple-item {
   flex-direction: column;
 }
 
-body.light .mini-card {
   background: #f8f8f8;
 
   border-color: #d5d5d5;
@@ -2096,7 +2053,6 @@ body.light .mini-card {
   color: #fff;
 }
 
-body.light .footer a:hover {
   color: #111;
 }
 

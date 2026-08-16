@@ -49,8 +49,6 @@ document.addEventListener(
 
 
     /* Existing functionality */
-    initTheme();
-
     initCommandPalette();
 
     initPronounce();
@@ -922,65 +920,9 @@ function updateGitHubSummary(
 
 
 /* =========================================================
-   THEME
-   ========================================================= */
-
-function initTheme() {
-
-  const button =
-    $(".theme-toggle");
-
-
-  if (!button) {
-    return;
-  }
-
-
-  const saved =
-    localStorage.getItem(
-      "diwash-theme"
-    );
-
-
-  if (
-    saved === "light"
-  ) {
-
-    document.body.classList.add(
-      "light"
-    );
-
-  }
-
-
-  button.addEventListener(
-    "click",
-    () => {
-
-      document.body.classList.toggle(
-        "light"
-      );
-
-
-      localStorage.setItem(
-        "diwash-theme",
-
-        document.body.classList.contains(
-          "light"
-        )
-          ? "light"
-          : "dark"
-      );
-
-    }
-  );
-
-}
-
-
-/* =========================================================
    PRONOUNCE
    ========================================================= */
+
 
 function initPronounce() {
 
