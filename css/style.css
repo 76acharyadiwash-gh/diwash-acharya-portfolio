@@ -1082,6 +1082,38 @@ body.light .about-copy strong {
   color: #111;
 }
 
+/* =========================
+   ABOUT TYPING ANIMATION
+   ========================= */
+
+#about-typing .about-line {
+  opacity: 0;
+  visibility: hidden;
+}
+
+#about-typing .about-line.typing,
+#about-typing .about-line.done {
+  opacity: 1;
+  visibility: visible;
+}
+
+#about-typing .about-line.typing::after {
+  content: "|";
+  display: inline-block;
+  margin-left: 3px;
+  animation: aboutCursor 0.65s step-end infinite;
+}
+
+#about-typing .about-line.done::after {
+  display: none;
+}
+
+@keyframes aboutCursor {
+  50% {
+    opacity: 0;
+  }
+}
+
 
 /* =========================================================
    GITHUB CONTRIBUTIONS

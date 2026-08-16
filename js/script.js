@@ -65,8 +65,86 @@ document.addEventListener(
     /* Anime */
     initAnimeMotion();
 
+    /* About typing animation */
+    initAboutTyping();
+
   }
 );
+
+
+/* =========================================================
+   ABOUT TYPING ANIMATION
+   ========================================================= */
+
+function initAboutTyping() {
+  const lines = document.querySelectorAll("#about-typing .about-line");
+  if (!lines.length) return;
+
+  let currentLine = 0;
+
+  function typeLine(element, callback) {
+    const originalHTML = element.innerHTML;
+
+    // Get the plain text without destroying the original HTML
+    const temp = document.createElement("div");
+    temp.innerHTML = originalHTML;
+    const text = temp.textContent;
+
+    // Store original HTML
+    element.dataset.originalHTML = originalHTML;
+
+    // Start empty
+    element.textContent = "";
+    element.classList.add("typing");
+
+    let index = 0;
+
+    function typeCharacter() {
+      if (index < text.length) {
+        element.textContent += text[index];
+        index++;
+
+        let delay = 14;
+
+        if (text[index - 1] === ".") {
+          delay = 120;
+        } else if (text[index - 1] === ",") {
+          delay = 60;
+        } else if (text[index - 1] === " ") {
+          delay = 8;
+        }
+
+        setTimeout(typeCharacter, delay);
+      } else {
+        /*
+         * IMPORTANT:
+         * Restore the formatted HTML permanently.
+         */
+        element.innerHTML = element.dataset.originalHTML;
+        element.classList.remove("typing");
+        element.classList.add("done");
+
+        if (callback) {
+          setTimeout(callback, 180);
+        }
+      }
+    }
+
+    typeCharacter();
+  }
+
+  function nextLine() {
+    if (currentLine >= lines.length) return;
+
+    const line = lines[currentLine];
+    typeLine(line, () => {
+      currentLine++;
+      nextLine();
+    });
+  }
+
+  setTimeout(nextLine, 500);
+}
 
 
 /* =========================================================
