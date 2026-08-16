@@ -53,6 +53,123 @@
 
 
 <body>
+<!-- Fixed canvas background colored black -->
+
+<canvas id="dotCanvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: #000000;"></canvas>
+
+<script>
+  const canvas = document.getElementById('dotCanvas');
+  const ctx = canvas.getContext('2d');
+  
+  // ==========================================
+  // CONFIGURATION: CHANGE EVERYTHING HERE
+  // ==========================================
+  const SETTINGS = {
+    dotColors: ['#34ab29', '#ff6b6b', '#4ecdc4', '#ffd93d', '#a78bfa'],  // Multiple dot colors
+    lineColor: '#34ab29',      // Color of connecting lines
+    dotCount: 50,              // Total number of dots
+    maxRadius: 4,              // Maximum size of dots
+    minRadius: 1.5,            // Minimum size of dots
+    maxSpeed: 0.8,             // Maximum movement speed
+    connectDistance: 120,      // Max distance to draw lines between dots
+    mouseRadius: 150,          // Distance around mouse where dots react
+    mousePush: true            // True: push dots away | False: attract dots
+  };
+
+  let width, height;
+  let dots = [];
+  const mouse = { x: null, y: null };
+
+  function resize() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  }
+  
+  window.addEventListener('resize', resize);
+  window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  window.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+  resize();
+
+  // Initialize dots
+  for (let i = 0; i < SETTINGS.dotCount; i++) {
+    dots.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      vx: (Math.random() - 0.5) * SETTINGS.maxSpeed * 2,
+      vy: (Math.random() - 0.5) * SETTINGS.maxSpeed * 2,
+      radius: Math.random() * (SETTINGS.maxRadius - SETTINGS.minRadius) + SETTINGS.minRadius,
+      color: SETTINGS.dotColors[Math.floor(Math.random() * SETTINGS.dotColors.length)]
+    });
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    
+    // 1. Update positions and draw dots
+    dots.forEach(dot => {
+      dot.x += dot.vx;
+      dot.y += dot.vy;
+
+      // Wall bounce
+      if (dot.x < 0 || dot.x > width) dot.vx *= -1;
+      if (dot.y < 0 || dot.y > height) dot.vy *= -1;
+
+      // Mouse Interaction
+      if (mouse.x !== null) {
+        const dx = dot.x - mouse.x;
+        const dy = dot.y - mouse.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < SETTINGS.mouseRadius) {
+          const force = (SETTINGS.mouseRadius - distance) / SETTINGS.mouseRadius;
+          const angle = Math.atan2(dy, dx);
+          const pushX = Math.cos(angle) * force * 2;
+          const pushY = Math.sin(angle) * force * 2;
+
+          if (SETTINGS.mousePush) {
+            dot.x += pushX;
+            dot.y += pushY;
+          } else {
+            dot.x -= pushX;
+            dot.y -= pushY;
+          }
+        }
+      }
+
+      // Draw dot
+      ctx.beginPath();
+      ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2);
+      ctx.fillStyle = dot.color;
+      ctx.fill();
+    });
+
+    // 2. Draw lines between close dots
+    for (let i = 0; i < dots.length; i++) {
+      for (let j = i + 1; j < dots.length; j++) {
+        const dx = dots[i].x - dots[j].x;
+        const dy = dots[i].y - dots[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < SETTINGS.connectDistance) {
+          // Fade lines based on how far apart the dots are
+          const alpha = (1 - dist / SETTINGS.connectDistance) * 0.15;
+          ctx.strokeStyle = SETTINGS.lineColor;
+          ctx.globalAlpha = alpha;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(dots[i].x, dots[i].y);
+          ctx.lineTo(dots[j].x, dots[j].y);
+          ctx.stroke();
+          ctx.globalAlpha = 1.0; // Reset alpha
+        }
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>
 
   <div class="site-shell">
 
@@ -610,7 +727,7 @@
           <!-- LinkedIn -->
           <a
             class="social-card"
-            href="https://www.linkedin.com/"
+            href="https://www.linkedin.com/in/76-diwash/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -643,7 +760,7 @@
 
             <span>
               <strong>LinkedIn</strong>
-              <small>Add your profile URL</small>
+              <small>linkedin.com/in/76-diwash</small>
             </span>
 
 
