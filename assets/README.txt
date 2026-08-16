@@ -1,0 +1,1 @@
+Put your real profile photo, certificates, resume, project screenshots, or other media in this folder and update index.html references.
