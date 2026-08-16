@@ -65,13 +65,13 @@
   // CONFIGURATION: CHANGE EVERYTHING HERE
   // ==========================================
   const SETTINGS = {
-    dotColors: ['#CBCF80', '#753B38', '#ffffff', '#354A66', '#3A2E63', '#ffffff'],  // Multiple dot colors
-    lineColor: '#ffffff',      // Color of connecting lines
-    dotCount: 130,              // Total number of dots
+    dotColors: ['#34ab29', '#ff6b6b', '#4ecdc4', '#ffd93d', '#a78bfa'],  // Multiple dot colors
+    lineColor: '#34ab29',      // Color of connecting lines
+    dotCount: 50,              // Total number of dots
     maxRadius: 4,              // Maximum size of dots
     minRadius: 1.5,            // Minimum size of dots
     maxSpeed: 0.8,             // Maximum movement speed
-    connectDistance: 190,      // Max distance to draw lines between dots
+    connectDistance: 120,      // Max distance to draw lines between dots
     mouseRadius: 150,          // Distance around mouse where dots react
     mousePush: true            // True: push dots away | False: attract dots
   };
@@ -261,6 +261,40 @@
 
         </a>
 
+
+        <!-- Theme -->
+        <button
+          class="icon-btn theme-toggle"
+          type="button"
+          aria-label="Toggle theme"
+        >
+
+          <svg
+            class="sun"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+
+            <circle
+              cx="12"
+              cy="12"
+              r="4"
+            />
+
+            <path
+              d="M12 2v2
+                 M12 20v2
+                 M4.93 4.93l1.41 1.41
+                 M17.66 17.66l1.41 1.41
+                 M2 12h2
+                 M20 12h2
+                 M4.93 19.07l1.41-1.41
+                 M17.66 6.34l1.41-1.41"
+            />
+
+          </svg>
+
+        </button>
 
       </div>
 
