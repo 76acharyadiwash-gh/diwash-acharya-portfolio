@@ -2,6 +2,10 @@
 
 A vanilla HTML/CSS/JavaScript  portfolio site.
 
+
+# live on : 
+https://acharyadiwash76.com.np/ 
+
 ## Included
 
 - Dark, grid-based, minimal developer aesthetic
@@ -16,7 +20,6 @@ A vanilla HTML/CSS/JavaScript  portfolio site.
 - Large technology stack grid
 - Expandable project list
 - Achievements & highlights
-- Blog cards
 - Products cards
 - Dark/light theme toggle
 - Command palette (`Ctrl+K` / `⌘K`)
