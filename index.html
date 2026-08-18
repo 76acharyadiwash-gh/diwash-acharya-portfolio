@@ -67,18 +67,19 @@
   const SETTINGS = {
     dotColors: ['#CBCF80', '#753B38', '#ffffff', '#354A66', '#3A2E63', '#ffffff'],  // Multiple dot colors
     lineColor: '#ffffff',      // Color of connecting lines
-    dotCount: 130,              // Total number of dots
+    dotCount: 100,              // Total number of dots
     maxRadius: 5,              // Maximum size of dots
     minRadius: 2,            // Minimum size of dots
-    maxSpeed: 1.1,             // Maximum movement speed
+    maxSpeed: 1.6,             // Maximum movement speed
     connectDistance: 190,      // Max distance to draw lines between dots
-    mouseRadius: 250,          // Distance around mouse where dots react
-    mousePush: true            // True: push dots away | False: attract dots
+    mouseRadius: 240,          // Distance around mouse where dots react
+    mousePush: true,           // True: push dots away | False: attract dots
+    mouseResponse: 0.22        // Higher value = faster cursor tracking response
   };
 
   let width, height;
   let dots = [];
-  const mouse = { x: null, y: null };
+  const mouse = { x: 0, y: 0, targetX: 0, targetY: 0, active: false };
 
   function resize() {
     width = canvas.width = window.innerWidth;
@@ -86,8 +87,16 @@
   }
   
   window.addEventListener('resize', resize);
-  window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
-  window.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+  window.addEventListener('mousemove', (e) => {
+    mouse.targetX = e.clientX;
+    mouse.targetY = e.clientY;
+    mouse.active = true;
+  });
+  window.addEventListener('mouseleave', () => {
+    mouse.active = false;
+    mouse.targetX = null;
+    mouse.targetY = null;
+  });
   resize();
 
   // Initialize dots
@@ -103,6 +112,14 @@
   }
 
   function animate() {
+    if (mouse.active && mouse.targetX !== null) {
+      mouse.x += (mouse.targetX - mouse.x) * SETTINGS.mouseResponse;
+      mouse.y += (mouse.targetY - mouse.y) * SETTINGS.mouseResponse;
+    } else {
+      mouse.x *= 0.9;
+      mouse.y *= 0.9;
+    }
+
     ctx.clearRect(0, 0, width, height);
     
     // 1. Update positions and draw dots
@@ -115,16 +132,17 @@
       if (dot.y < 0 || dot.y > height) dot.vy *= -1;
 
       // Mouse Interaction
-      if (mouse.x !== null) {
+      if (mouse.active) {
         const dx = dot.x - mouse.x;
         const dy = dot.y - mouse.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         if (distance < SETTINGS.mouseRadius) {
-          const force = (SETTINGS.mouseRadius - distance) / SETTINGS.mouseRadius;
+          const influence = 1 - distance / SETTINGS.mouseRadius;
+          const force = Math.pow(influence, 1.5) * 10;
           const angle = Math.atan2(dy, dx);
-          const pushX = Math.cos(angle) * force * 2;
-          const pushY = Math.sin(angle) * force * 2;
+          const pushX = Math.cos(angle) * force;
+          const pushY = Math.sin(angle) * force;
 
           if (SETTINGS.mousePush) {
             dot.x += pushX;
@@ -152,7 +170,7 @@
 
         if (dist < SETTINGS.connectDistance) {
           // Fade lines based on how far apart the dots are
-          const alpha = (1 - dist / SETTINGS.connectDistance) * 0.15;
+          const alpha = (1 - dist / SETTINGS.connectDistance) * 0.35;
           ctx.strokeStyle = SETTINGS.lineColor;
           ctx.globalAlpha = alpha;
           ctx.lineWidth = 1;
