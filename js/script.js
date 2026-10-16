@@ -57,6 +57,8 @@ document.addEventListener(
 
     initExpanders();
 
+    initContactForm();
+
 
     /* GitHub */
     initGitHubContributions();
@@ -70,6 +72,116 @@ document.addEventListener(
 
   }
 );
+
+
+/* =========================================================
+   CONTACT FORM
+   ========================================================= */
+
+function initContactForm() {
+  const form = $("#contact-form");
+  const button = $("#contact-submit");
+  const buttonText = $("#contact-button-text");
+  const status = $("#contact-status");
+  const accessKeyInput = form?.querySelector('[name="access_key"]');
+
+  if (!form || !button || !buttonText || !status || !accessKeyInput) {
+    return;
+  }
+
+  const accessKey = accessKeyInput.value.trim();
+  const configured = Boolean(
+    accessKey && accessKey !== "YOUR_WEB3FORMS_ACCESS_KEY"
+  );
+
+  button.disabled = !configured;
+
+  if (!configured) {
+    showContactStatus(
+      "The contact form isn't configured yet. Add your Web3Forms access key to enable sending.",
+      "error"
+    );
+  } else {
+    status.textContent = "";
+    status.className = "contact-status";
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (button.disabled) {
+      return;
+    }
+
+    if (!form.reportValidity()) {
+      return;
+    }
+
+    const honeypot = form.querySelector('[name="botcheck"]');
+
+    if (honeypot?.checked) {
+      showContactStatus(
+        "Unable to send your message. Please try again.",
+        "error"
+      );
+      return;
+    }
+
+    button.disabled = true;
+    buttonText.textContent = "Sending...";
+    status.textContent = "";
+    status.className = "contact-status";
+
+    try {
+      const response = await fetch(
+        "https://api.web3forms.com/submit",
+        {
+          method: "POST",
+          body: new FormData(form),
+          headers: {
+            Accept: "application/json"
+          }
+        }
+      );
+
+      let result;
+
+      try {
+        result = await response.json();
+      } catch {
+        throw new Error("The server returned an unexpected response.");
+      }
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.message || "Your message could not be sent."
+        );
+      }
+
+      form.reset();
+      showContactStatus(
+        "Thanks for reaching out! Your message was sent successfully.",
+        "success"
+      );
+    } catch (error) {
+      console.error("Contact form submission failed:", error);
+      showContactStatus(
+        error instanceof TypeError
+          ? "We couldn't connect to the contact service. Check your connection and try again."
+          : error.message || "Your message could not be sent. Please try again.",
+        "error"
+      );
+    } finally {
+      button.disabled = false;
+      buttonText.textContent = "Send Message ↗";
+    }
+  });
+
+  function showContactStatus(message, type) {
+    status.textContent = message;
+    status.className = `contact-status is-visible is-${type}`;
+  }
+}
 
 
 /* =========================================================

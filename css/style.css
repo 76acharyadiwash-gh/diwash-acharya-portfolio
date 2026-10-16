@@ -2135,6 +2135,263 @@ body.light .footer a:hover {
 
 
 /* =========================================================
+   CONTACT
+   ========================================================= */
+
+.contact-section {
+  --contact-green: #42f57b;
+
+  width: calc(100% - 36px);
+  max-width: 884px;
+  margin: 34px auto 0;
+  padding: 26px 28px;
+
+  border: 1px solid #252529;
+  border-radius: 12px;
+  background: #0d0d0f;
+  color: #f4f4f5;
+}
+
+.contact-heading {
+  max-width: 560px;
+  margin-bottom: 21px;
+}
+
+.contact-eyebrow {
+  display: inline-block;
+  margin-bottom: 7px;
+
+  color: var(--contact-green);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.7px;
+}
+
+.contact-heading h2 {
+  margin: 0 0 7px;
+
+  color: #fff;
+  font-family: Inter, sans-serif;
+  font-size: clamp(24px, 4vw, 31px);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -1px;
+}
+
+.contact-dot {
+  color: var(--contact-green);
+}
+
+.contact-heading p {
+  max-width: 490px;
+  margin: 0;
+
+  color: #aaa;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.contact-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.contact-field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.contact-field label {
+  color: #ddd;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.contact-field input,
+.contact-field textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+
+  border: 1px solid #303034;
+  border-radius: 7px;
+  outline: none;
+  background: #111113;
+  color: #f4f4f5;
+  font: inherit;
+  font-size: 12px;
+
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.contact-field input {
+  min-height: 42px;
+}
+
+.contact-field textarea {
+  min-height: 92px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.contact-field input::placeholder,
+.contact-field textarea::placeholder {
+  color: #777;
+}
+
+.contact-field input:hover,
+.contact-field textarea:hover {
+  border-color: #55555b;
+}
+
+.contact-field input:focus-visible,
+.contact-field textarea:focus-visible {
+  border-color: var(--contact-green);
+  background: #141614;
+  box-shadow: 0 0 0 3px rgba(66, 245, 123, 0.12);
+}
+
+.contact-message-field {
+  grid-column: 1 / -1;
+}
+
+.contact-submit-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 15px;
+}
+
+#contact-submit {
+  display: inline-flex;
+  min-height: 41px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 17px;
+
+  border: 1px solid var(--contact-green);
+  border-radius: 7px;
+  background: var(--contact-green);
+  color: #050805;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+#contact-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: #fff;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(66, 245, 123, 0.1);
+}
+
+#contact-submit:focus-visible {
+  outline: 2px solid var(--contact-green);
+  outline-offset: 4px;
+}
+
+#contact-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.contact-note {
+  color: #777;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.contact-status {
+  display: none;
+  margin: 13px 0 0;
+  padding: 9px 11px;
+
+  border: 1px solid transparent;
+  border-radius: 7px;
+  font-size: 11px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.contact-status.is-visible {
+  display: block;
+}
+
+.contact-status.is-success {
+  border-color: rgba(66, 245, 123, 0.3);
+  background: rgba(66, 245, 123, 0.07);
+  color: var(--contact-green);
+}
+
+.contact-status.is-error {
+  border-color: #38383d;
+  background: #121214;
+  color: #eee;
+}
+
+.contact-honeypot {
+  position: absolute !important;
+  left: -10000px !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+}
+
+@media (max-width: 600px) {
+  .contact-section {
+    margin-top: 26px;
+    padding: 21px 17px;
+  }
+
+  .contact-heading {
+    margin-bottom: 18px;
+  }
+
+  .contact-fields {
+    grid-template-columns: 1fr;
+    gap: 13px;
+  }
+
+  .contact-message-field {
+    grid-column: auto;
+  }
+
+  .contact-submit-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  #contact-submit {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-field input,
+  .contact-field textarea,
+  #contact-submit {
+    transition: none;
+  }
+}
+
+
+/* =========================================================
    COMMAND PALETTE
    ========================================================= */
 
